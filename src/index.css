@@ -1,0 +1,22 @@
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: clamp(20px, 50vw, 400px);
+    margin: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.cont {
+    display: flex;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}

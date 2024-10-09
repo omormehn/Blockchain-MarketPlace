@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import {
+  apiKey,
+  apiSecret,
   buyProducts,
   contractAbi,
   contractAddress,
@@ -16,8 +18,8 @@ const Home = () => {
   const [contract, setContract] = useState(null);
   const [products, setProducts] = useState([]);
   const [ownedProduct, setOwnedProduct] = useState([]);
-  
-
+  const [ cid, setCid ] = useState('');
+  const [file, setFile] = useState(null);
   useEffect(() => {
     async function init() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -61,6 +63,69 @@ const Home = () => {
     init();
   }, []);
 
+    const handleUpload = async () => {
+      const pinataApiKey = apiKey;
+      const pinataApiSecret =
+        apiSecret;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const fetchResponse = await fetch(
+          "https://api.pinata.cloud/pinning/pinFileToIPFS",
+          {
+            method: "POST",
+            headers: {
+              pinata_api_key: pinataApiKey,
+              pinata_secret_api_key: pinataApiSecret,
+            },
+            body: formData,
+          }
+        );
+
+        const response = await fetchResponse.json();
+        console.log("response:", response);
+        const url = response.IpfsHash;
+        setCid(url);
+
+        // Get the name from the input field before calling createProduct
+        const name = document.getElementById("name").value;
+        const price = document.getElementById("itemPrice").value;
+        const description = document.getElementById("itemDesc").value;
+        const category = document.getElementById("category").value;
+
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = await provider.getSigner();
+          const contract = new ethers.Contract(
+            contractAddress,
+            contractAbi,
+            signer
+          );
+          console.log(contract);
+          const url = await listProducts(
+            contract,
+            name,
+            price,
+            description,
+            category,
+            cid
+          );
+
+          console.log("Product created successfully:", url);
+        } catch (error) {
+          console.error("Error creating product:", error);
+        }
+      } catch (error) {
+        console.error("Error uploading file to IPFS:", error);
+      }
+    };
+
+  
+
+
+
   return (
     <div>
       Market Place
@@ -69,7 +134,7 @@ const Home = () => {
       <br />
       <div>
         <h1>List Item</h1>
-        <input type="text" id="itemName" placeholder="name" />
+        <input type="text" id="name" placeholder="name" />
         <input type="number" id="itemPrice" placeholder="price" step={0.01} />
         <input type="text" id="itemDesc" placeholder="description" />
         <select id="category" name="category">
@@ -78,19 +143,8 @@ const Home = () => {
           <option value="Fashion">Fashion</option>
           <option value="Home Goods">Home Goods</option>
         </select>
-        <button
-          onClick={() =>
-            listProducts(
-              contract,
-              document.getElementById("itemName").value,
-              document.getElementById("itemPrice").value,
-              document.getElementById("itemDesc").value,
-              document.getElementById("category").value
-            )
-          }
-        >
-          Create Product
-        </button>
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <button onClick={handleUpload}>Create Product</button>
       </div>
       {/* Items */}
       <h2>Items for sale</h2>
@@ -100,6 +154,7 @@ const Home = () => {
             <h3>Name: {product.name}</h3>
             <h3>Price: {ethers.utils.formatEther(product.price)}</h3>
             <h3>Desc: {product.description}</h3>
+            <img src={`https://ipfs.io/ipfs/${product.imageHash}`} alt="Uploaded Image" />
             <h3>Cat: {product.category}</h3>
             <h4>Owner: {product.owner}</h4>
             {!product.purchased &&
@@ -130,6 +185,10 @@ const Home = () => {
             <h3>Desc: {product.description}</h3>
             <h3>Cat: {product.category}</h3>
             <h4>Owner: {product.owner}</h4>
+            <img
+              src={`https://ipfs.io/ipfs/${product.imageHash}`}
+              alt="Uploaded Image"
+            />
 
             <input
               type="text"

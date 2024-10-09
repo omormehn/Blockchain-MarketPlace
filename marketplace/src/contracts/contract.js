@@ -1,562 +1,14 @@
 import { ethers } from "ethers";
+import dotenv from 'dotenv';
 
-export const contractAddress = "0x39f9e9ACabF06C27c153faa62353226770046470"
+dotenv.config()
 
-export const contractAbi = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-    ],
-    name: "buyProducts",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-    ],
-    name: "createCategory",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_price",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_description",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_category",
-        type: "string",
-      },
-    ],
-    name: "createProduct",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "price",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address payable",
-        name: "owner",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "purchased",
-        type: "bool",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "rating",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "category",
-        type: "string",
-      },
-    ],
-    name: "ProductCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "price",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address payable",
-        name: "owner",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "purchased",
-        type: "bool",
-      },
-    ],
-    name: "ProductPurchased",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_rating",
-        type: "uint256",
-      },
-    ],
-    name: "rateProduct",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_id",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_to",
-        type: "address",
-      },
-    ],
-    name: "transferProduct",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_newName",
-        type: "string",
-      },
-    ],
-    name: "updateCategory",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "allCategories",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    name: "categories",
-    outputs: [
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "countProduct",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getAllProducts",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "price",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-          {
-            internalType: "address payable",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "purchased",
-            type: "bool",
-          },
-          {
-            internalType: "uint256",
-            name: "rating",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "category",
-            type: "string",
-          },
-        ],
-        internalType: "struct Market.Product[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getCategories",
-    outputs: [
-      {
-        internalType: "string[]",
-        name: "",
-        type: "string[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_name",
-        type: "string",
-      },
-    ],
-    name: "getCategory",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "uint256[]",
-            name: "productIds",
-            type: "uint256[]",
-          },
-        ],
-        internalType: "struct Market.Category",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_owner",
-        type: "address",
-      },
-    ],
-    name: "getItemsByOwner",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_category",
-        type: "string",
-      },
-    ],
-    name: "getProductsByCategory",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_productId",
-        type: "uint256",
-      },
-    ],
-    name: "getProductsByIds",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "name",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "price",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "description",
-            type: "string",
-          },
-          {
-            internalType: "address payable",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "bool",
-            name: "purchased",
-            type: "bool",
-          },
-          {
-            internalType: "uint256",
-            name: "rating",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "category",
-            type: "string",
-          },
-        ],
-        internalType: "struct Market.Product",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "ownedItems",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "products",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "price",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "description",
-        type: "string",
-      },
-      {
-        internalType: "address payable",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "purchased",
-        type: "bool",
-      },
-      {
-        internalType: "uint256",
-        name: "rating",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "category",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ratingCount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-] 
+export const apiKey = process.env.API_KEY
+export const apiSecret = process.env.API_SECRET
 
+export const contractAddress = "0x0Ef8759087c79a3A76ff5913f02bB546a78DD396";
+
+export const contractAbi = []
 
 
 export const loadProducts = async (contract) => {
@@ -569,10 +21,19 @@ export const loadProducts = async (contract) => {
     }
     return products;
   } catch (error) {
-    console.error("error in loadProducts", error)
+    console.error("error in loadProducts", error);
   }
+};
 
-}
+
+export const getImage = async (contract) => {
+  try {
+    const imageHash = await contract.getHash("Bank"); 
+    return imageHash;
+  } catch (error) {
+    console.error("Error in getImage", error);
+  }
+};
 
 export const loadOwnedProducts = async (contract) => {
    const signer = contract.signer;
@@ -599,12 +60,14 @@ export const loadOwnedProducts = async (contract) => {
 }
 
 //create a product
-export const listProducts = async (contract, name, price, description, category) => {
+export const listProducts = async (contract, name, price, description, category, cid) => {
+    
   try {
     const tx = await contract.createProduct(
       name,
       ethers.utils.parseEther(price),
       description,
+      cid,
       category
     );
     await tx.wait();
@@ -624,12 +87,13 @@ export const buyProducts = async (contract, productId, price, provider, account)
 
     const tx = await contract.buyProducts(productId, {
       value: productPrice,
+      gasLimit: 100000000000000
     });
     await tx.wait();
 
     // Update the product's purchased status
     const updatedProduct = await contract.getProductsByIds(productId);
-    updatedProduct.purchased = true;
+    updatedProduct.status = 1;
 
     loadProducts(contract);
     loadOwnedProducts(contract);
@@ -676,3 +140,4 @@ export const transferProduct = async (contract, productId, toAccount) => {
   //       });
   //     });
   //   });
+

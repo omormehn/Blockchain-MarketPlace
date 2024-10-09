@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  apiKey,
-  apiSecret,
   buyProducts,
   contractAbi,
   contractAddress,
@@ -64,9 +62,9 @@ const Home = () => {
   }, []);
 
     const handleUpload = async () => {
-      const pinataApiKey = apiKey;
+      const pinataApiKey = '';
       const pinataApiSecret =
-        apiSecret;
+        '';
 
       const formData = new FormData();
       formData.append("file", file);

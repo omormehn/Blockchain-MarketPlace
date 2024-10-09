@@ -1,12 +1,7 @@
 import { ethers } from "ethers";
-import dotenv from 'dotenv';
 
-dotenv.config()
 
-export const apiKey = process.env.API_KEY
-export const apiSecret = process.env.API_SECRET
-
-export const contractAddress = "0x0Ef8759087c79a3A76ff5913f02bB546a78DD396";
+export const contractAddress = "";
 
 export const contractAbi = []
 
@@ -22,16 +17,6 @@ export const loadProducts = async (contract) => {
     return products;
   } catch (error) {
     console.error("error in loadProducts", error);
-  }
-};
-
-
-export const getImage = async (contract) => {
-  try {
-    const imageHash = await contract.getHash("Bank"); 
-    return imageHash;
-  } catch (error) {
-    console.error("Error in getImage", error);
   }
 };
 
@@ -112,32 +97,4 @@ export const transferProduct = async (contract, productId, toAccount) => {
     console.error("Error in transfer product", error)
   }
 }
-
-
-  //  connectWallet().then(({ account, provider, signer, contract }) => {
-  //     setProvider(provider);
-  //     setSigner(signer);
-  //     setContract(contract);
-  //     setAccount(account);
-  //     loadProducts(contract).then((product) => {
-  //       setProducts(product);
-  //     });
-
-  //     loadOwnedProducts(contract, account).then((ownedItems) => {
-  //       setOwnedProduct(ownedItems);
-  //     });
-  //     window.ethereum.on("accountChanged", async (account) => {
-  //       setAccount(account[0]);
-  //       setSigner(signer);
-  //       setContract(contract);
-
-  //       loadProducts(contract).then((product) => {
-  //         setProducts(product);
-  //       });
-
-  //       loadOwnedProducts(contract, account).then((ownedItems) => {
-  //         setOwnedProduct(ownedItems);
-  //       });
-  //     });
-  //   });
 

@@ -64,9 +64,9 @@ const Home = () => {
   }, []);
 
   const handleUpload = async () => {
-    const pinataApiKey = "a9f5821409ca6566e19d";
+    const pinataApiKey = "";
     const pinataApiSecret =
-      "50a6b7082c31d6fba765896c5bc05dcfcb52125ba3a68ac46f5f2c0a7a60a49e";
+      "";
 
     const formData = new FormData();
     formData.append("file", file);

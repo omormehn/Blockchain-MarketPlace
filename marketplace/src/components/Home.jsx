@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import {
-  apiKey,
-  apiSecret,
   buyProducts,
+  confirmDelivery,
   contractAbi,
   contractAddress,
+  deleteProduct,
   listProducts,
   loadOwnedProducts,
   loadProducts,
   transferProduct,
 } from "../contracts/contract";
 import { ethers } from "ethers";
+import { small } from "framer-motion/client";
 
 const Home = () => {
   const [account, setAccount] = useState("");
@@ -18,11 +19,10 @@ const Home = () => {
   const [contract, setContract] = useState(null);
   const [products, setProducts] = useState([]);
   const [ownedProduct, setOwnedProduct] = useState([]);
-  const [ cid, setCid ] = useState('');
   const [file, setFile] = useState(null);
   useEffect(() => {
     async function init() {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const provider = new ethers.BrowserProvider(window.ethereum);
       setProvider(provider);
 
       window.ethereum.on("accountsChanged", async (accounts) => {
@@ -31,7 +31,7 @@ const Home = () => {
 
         window.location.reload();
 
-        const signer = provider.getSigner();
+        const signer = await provider.getSigner();
 
         const contract = new ethers.Contract(
           contractAddress,
@@ -45,7 +45,7 @@ const Home = () => {
       const account = await provider.send("eth_requestAccounts", []);
       setAccount(account[0]);
 
-      const signer = provider.getSigner();
+      const signer = await provider.getSigner();
 
       const contract = new ethers.Contract(
         contractAddress,
@@ -63,68 +63,54 @@ const Home = () => {
     init();
   }, []);
 
-    const handleUpload = async () => {
-      const pinataApiKey = apiKey;
-      const pinataApiSecret =
-        apiSecret;
+  const handleUpload = async () => {
+    const pinataApiKey = "a9f5821409ca6566e19d";
+    const pinataApiSecret =
+      "50a6b7082c31d6fba765896c5bc05dcfcb52125ba3a68ac46f5f2c0a7a60a49e";
 
-      const formData = new FormData();
-      formData.append("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
 
-      try {
-        const fetchResponse = await fetch(
-          "https://api.pinata.cloud/pinning/pinFileToIPFS",
-          {
-            method: "POST",
-            headers: {
-              pinata_api_key: pinataApiKey,
-              pinata_secret_api_key: pinataApiSecret,
-            },
-            body: formData,
-          }
-        );
-
-        const response = await fetchResponse.json();
-        console.log("response:", response);
-        const url = response.IpfsHash;
-        setCid(url);
-
-        // Get the name from the input field before calling createProduct
-        const name = document.getElementById("name").value;
-        const price = document.getElementById("itemPrice").value;
-        const description = document.getElementById("itemDesc").value;
-        const category = document.getElementById("category").value;
-
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = await provider.getSigner();
-          const contract = new ethers.Contract(
-            contractAddress,
-            contractAbi,
-            signer
-          );
-          console.log(contract);
-          const url = await listProducts(
-            contract,
-            name,
-            price,
-            description,
-            category,
-            cid
-          );
-
-          console.log("Product created successfully:", url);
-        } catch (error) {
-          console.error("Error creating product:", error);
+    try {
+      const fetchResponse = await fetch(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        {
+          method: "POST",
+          headers: {
+            pinata_api_key: pinataApiKey,
+            pinata_secret_api_key: pinataApiSecret,
+          },
+          body: formData,
         }
+      );
+
+      const response = await fetchResponse.json();
+      console.log("response:", response);
+      const cid = response.IpfsHash;
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractAbi,
+          signer
+        );
+        await listProducts(
+          contract,
+          document.getElementById("name").value,
+          document.getElementById("itemPrice").value,
+          document.getElementById("itemDesc").value,
+          document.getElementById("category").value,
+          cid
+        );
+        console.log("Product created successfully:");
       } catch (error) {
-        console.error("Error uploading file to IPFS:", error);
+        console.error("Error creating product:", error);
       }
-    };
-
-  
-
-
+    } catch (error) {
+      console.error("Error uploading file to IPFS:", error);
+    }
+  };
 
   return (
     <div>
@@ -152,27 +138,43 @@ const Home = () => {
         {products.map((product, index) => (
           <div key={index} className="card">
             <h3>Name: {product.name}</h3>
-            <h3>Price: {ethers.utils.formatEther(product.price)}</h3>
+            <h3>Price: {ethers.formatEther(product.price)}</h3>
             <h3>Desc: {product.description}</h3>
-            <img src={`https://ipfs.io/ipfs/${product.imageHash}`} alt="Uploaded Image" />
+            <img
+              src={`https://ipfs.io/ipfs/${product.imageHash}`}
+              alt="Uploaded Image"
+            />
+            <h1>i:{product.imageHash}</h1>
             <h3>Cat: {product.category}</h3>
             <h4>Owner: {product.owner}</h4>
-            {!product.purchased &&
-              product.owner.toLowerCase() !== account.toLowerCase() && (
-                <button
-                  onClick={() =>
-                    buyProducts(
-                      contract,
-                      product.id,
-                      ethers.utils.formatEther(product.price),
-                      provider,
-                      account
-                    )
-                  }
-                >
-                  Purchase
-                </button>
-              )}
+            <h1>stat: {product.status}</h1>
+            {product.owner.toLowerCase() !== account.toLowerCase() &&
+            product.isDeleted == false ? (
+              <button
+                onClick={() =>
+                  buyProducts(
+                    contract,
+                    product.id,
+                    ethers.formatEther(product.price),
+                    provider,
+                    account,
+                  )
+                }
+              >
+                Purchase
+              </button>
+            ) : (
+              <small>del.</small>
+            )}
+            {product.status == 1 && (
+              <button
+                onClick={() => {
+                  confirmDelivery(contract, product.id);
+                }}
+              >
+                Confirm delivery
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -181,7 +183,7 @@ const Home = () => {
         {ownedProduct.map((product, index) => (
           <div key={index} className="card">
             <h3>Name: {product.name}</h3>
-            <h3>Price: {ethers.utils.formatEther(product.price)}</h3>
+            <h3>Price: {ethers.formatEther(product.price)}</h3>
             <h3>Desc: {product.description}</h3>
             <h3>Cat: {product.category}</h3>
             <h4>Owner: {product.owner}</h4>
@@ -206,6 +208,17 @@ const Home = () => {
             >
               Transfer Product
             </button>
+            {product.isDeleted == false ? (
+              <button
+                onClick={() => {
+                  deleteProduct(contract, product.id);
+                }}
+              >
+                Delete
+              </button>
+            ) : (
+              product.isDeleted == true && <small>del.</small>
+            )}
           </div>
         ))}
       </div>

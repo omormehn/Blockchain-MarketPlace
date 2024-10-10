@@ -2,8 +2,10 @@
 pragma solidity ^0.8.24;
 
 import "./Escrow.sol";
+import 'hardhat/console.sol';
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-contract Market {
+contract Market is ReentrancyGuard {
     
     mapping(uint256 => Product) public products; // store every attribute of Product in products
     mapping(address => uint256[]) public ownedItems;
@@ -12,6 +14,8 @@ contract Market {
     string[] public allCategories;
 
     mapping(string => Category) public categories;
+
+    
 
     address public escrowContract;
 
@@ -62,6 +66,7 @@ contract Market {
         uint id,
         string name,
         uint256 price,
+        PurchaseStatus status,
         address payable owner
     );
 
@@ -108,6 +113,7 @@ contract Market {
             countProduct,
             _name,
             _price,
+            
             payable(msg.sender),
             false,
             0,
@@ -165,29 +171,24 @@ contract Market {
     function buyProducts(uint256 _id) public payable {
         //get product using id as identifier
         Product memory _product = products[_id];
-
-        address payable _seller = _product.owner;
-
-
         require(
-            _product.id > 0 && _product.id <= countProduct,
-            "Item does not exist"
+            _product.id > 0 && _product.id <= countProduct && _product.status != PurchaseStatus.Pending,
+            "Item does not exist or is requested"
         );
-
-        require(msg.value >= _product.price, "Insufficient amount");
-
-        require(_product.status > PurchaseStatus.Pending, "Item sold, in queue");
-
-        require(_seller != msg.sender, "You cannot purchase your product!");
+        require(_product.owner != msg.sender, "You cannot purchase your product!");
+        require(msg.value >= _product.price * 1 , "Insufficient amount");
 
         // Create a new escrow instance
         Escrow escrow = Escrow(escrowContract);
-        escrow.deposit{value: msg.value}(_seller);
+        escrow.setProductOwner(_product.owner, _product.owner);
+        escrow.approve(_product.price);
+        
+    
 
         _product.status = PurchaseStatus.Pending;
         products[_id] = _product;
 
-        transferOwnership(_id, payable(_seller), msg.sender);
+        transferOwnership(_id, payable( _product.owner), msg.sender);
 
         emit ProductPurchased(
             countProduct,
@@ -202,11 +203,11 @@ contract Market {
     function confirmDelivery(uint256 _id) public {
         Product memory _product = products[_id];
         require(_product.id != 0, "Not a valid delivery"); 
-
-        // Get the escrow instance
+        require(_product.status == PurchaseStatus.Pending, "Product has not been bought");
+        require(_product.owner == msg.sender, "You are not the owner of the product");
+        require(_product.status != PurchaseStatus.Delivered, "Product has already been delivered");
+        
         Escrow escrow = Escrow(escrowContract);
-
-        // Confirm the delivery
         escrow.withdraw(_product.owner);
 
         _product.status = PurchaseStatus.Delivered;
@@ -216,9 +217,12 @@ contract Market {
             countProduct,
             _product.name,
             _product.price,
+            _product.status,
             payable(msg.sender)
         );
     }
+    
+
 
     //handle Dispute
     function dispute(uint _id) public {
@@ -232,7 +236,7 @@ contract Market {
         escrow.holdFunds(_product.owner);
     }
 
-    //resolve dispute
+    // resolve dispute
     function resolveDispute(uint _id) public {
         // Get the product
         Product memory _product = products[_id];
@@ -303,6 +307,20 @@ contract Market {
             ratingCount;
     }
 
+    //create a category
+    function createCategory(string memory _name) public {
+        categories[_name] = Category(_name, new uint256[](0));
+        allCategories.push(_name);
+    }
+
+    //update a category
+    function updateCategory(string memory _name, string memory _newName)
+        public
+    {
+        Category storage category = categories[_name];
+        category.name = _newName;
+    }
+
     //get category
     function getCategory(string memory _name)
         public
@@ -325,6 +343,13 @@ contract Market {
     {
         Category storage category = categories[_category];
         return category.productIds;
+    }
+
+     fallback() external payable {
+        // fallback function that handled error from reentrancy guard
+    }
+
+    receive() external payable {
     }
 }
 

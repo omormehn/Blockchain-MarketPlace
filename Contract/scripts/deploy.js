@@ -2,7 +2,7 @@ const hardhat = require("hardhat");
 
 async function main() {
 
-  const escrow = "0x784aa1D25d0796fa6583D904507772115A2DD4C5";
+  const escrow = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
 
   const MarketPlace = await hardhat.ethers.getContractFactory('Market')
   const marketPlace = await MarketPlace.deploy(escrow);

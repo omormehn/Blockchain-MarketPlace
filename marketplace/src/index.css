@@ -1,15 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .primary-btn {
+         @apply inline-block bg-blue-500 text-white font-semibold rounded-lg duration-200 py-2 px-6;
+        &:hover {
+            @apply bg-blue-700
+        }
+    }
+    .secondary-btn{
+        @apply bg-blue-400 px-2 py-1 rounded-md
+    }
+}
+
+html{
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+
 .card {
     background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 10px;
+ 
     padding: 20px;
-    width: clamp(20px, 50vw, 400px);
-    margin: 20px;
+    width: clamp(10px, 90vw, 300px);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .card:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.parent-card:hover{
+    box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.3);
 }
 
 .cont {
@@ -19,4 +43,41 @@
 .flex {
     display: flex;
     flex-wrap: wrap;
+}
+.listing{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.listing>input {
+    width: 100%;
+    padding: 10px 0;
+    border: 1px solid slategrey;
+}
+.no-scroll {
+  overflow-y: hidden;
+  height: 100vh;
+}
+
+
+
+@media (min-width: 375px) {
+    .card {
+        width: clamp(288px, 70vw, 350px);
+    }
+}
+@media (min-width: 425px) {
+    .card {
+        width: clamp(305px, 70vw, 350px);
+    }
+}
+@media (min-width: 768px) {
+    .card {
+        width: clamp(200px, 90vw, 304.5px);
+    }
+}
+@media (min-width: 1024px) {
+    .card {
+        width: clamp(200px, 30vw, 320px);
+    }
 }

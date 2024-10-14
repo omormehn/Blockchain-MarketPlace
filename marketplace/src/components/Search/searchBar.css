@@ -1,0 +1,22 @@
+.searchBar {
+    width: clamp(15rem, 100%, 18rem);
+    display: flex;
+}
+
+@media (min-width:375px) {
+    .searchBar {
+        width: clamp(18rem, 100%, 20rem);
+    }
+}
+
+@media (min-width:768px) {
+    .searchBar {
+        width: clamp(28rem, 100%, 28rem);
+    }
+}
+@media (min-width:998px) {
+    .searchBar {
+        width: clamp(20rem, 100%, 38rem);
+    }
+}
+

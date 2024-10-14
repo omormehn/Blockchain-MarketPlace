@@ -46,8 +46,3 @@ contract Escrow {
     }
 }
 
-// ORR, the stuff should use the owner of the product 
-// as the agent, like owners of every product 
-// that is marked as pending and not available 
-//should be able to call the withdraw function,
-// yeah i think this makes more sense

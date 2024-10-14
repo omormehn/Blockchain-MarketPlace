@@ -7,10 +7,12 @@ import {
  } from "../contracts/contract";
 import { PuffLoader } from "react-spinners";
 import { connectWallet3 } from "../Web3/connectWallet";
+import ListingModal from "../components/WalltPopup/ListingModal";
 
 const ProductCard = () => {
   const [owned, setOwned] = useState([]);
   const [loading, setLoading] = useState(false);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -35,7 +37,7 @@ const ProductCard = () => {
  
 
   return (
-    <div className="flex justify-center   md:flex-wrap ">
+    <div className="flex justify-center flex-col  gap-5 md:flex-wrap ">
       {loading ? (
         <div className="pt-10 md:pt-20 lg:pt-24">
           <PuffLoader
@@ -45,6 +47,10 @@ const ProductCard = () => {
             aria-label="puff-loading"
             className="z-50"
           />
+        </div>
+      ) : owned.length === 0 ? (
+        <div className="pt-10 md:pt-20 lg:pt-24 text-center">
+          <h2>No owned items found.</h2>
         </div>
       ) : (
         owned.map((product, index) => (
@@ -66,6 +72,14 @@ const ProductCard = () => {
           </div>
         ))
       )}
+
+      <div className="flex justify-center">
+        <button onClick={() => setIsModalOpen(true)} className="primary-btn">
+          Add Product
+        </button>
+      </div>
+
+      {isModalOpen && <ListingModal setIssOpen={setIsModalOpen} />}
     </div>
   );
 };

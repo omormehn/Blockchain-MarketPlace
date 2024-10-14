@@ -2,7 +2,6 @@
 pragma solidity ^0.8.24;
 
 import "./Escrow.sol";
-import 'hardhat/console.sol';
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract Market is ReentrancyGuard {
@@ -352,5 +351,3 @@ contract Market is ReentrancyGuard {
     receive() external payable {
     }
 }
-
-

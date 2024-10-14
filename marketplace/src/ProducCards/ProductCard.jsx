@@ -100,7 +100,7 @@ const ProductCard = ({ searchQuery }) => {
         </div>
       ) : search(products).length === 0 ? (
         <div className="pt-28 lg:pt-36">
-          <h1>Not found</h1>
+          <h1>No Products, Please Refresh</h1>
         </div>
       ) : (
         search(products).map((product, index) => (

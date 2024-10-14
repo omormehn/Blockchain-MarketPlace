@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { RiCloseLine } from "react-icons/ri";
 import { PuffLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import "./listmodal.css";
+
 import {
   contractAbi,
   contractAddress,
@@ -76,12 +76,9 @@ const ListingModal = ({ setIssOpen }) => {
 
   return (
     <>
-      <div
-        className={`darkBG `}
-        onClick={() => setIssOpen(false)}
-      />
+      <div className={`darkBG `} onClick={() => setIssOpen(false)} />
       <div className="centered">
-        <div className="modal">
+        <div className="modal xs:w-[80vw] lg:w-[70vw] h-[90vh] md:h-[70vh] lg:h-[80vh] ">
           <div className="flex justify-between gap-x-16 z-20">
             <h5 className="text-black font-bold">Add Listing</h5>
             <button className="" onClick={() => setIssOpen(false)}>
@@ -112,7 +109,12 @@ const ListingModal = ({ setIssOpen }) => {
               required
               className="w-full p-2 border border-gray-400 rounded-md"
             />
-            <select id="category" name="category" required>
+            <select
+              id="category"
+              name="category"
+              className="w-[16rem] xs:w-[18rem] sm:w-[29rem] md:w-[20rem] "
+              required
+            >
               <option value="">Select a category</option>
               <option value="Electronics">Electronics</option>
               <option value="Fashion">Fashion</option>

@@ -15,9 +15,9 @@ const ListingModal = ({ setIssOpen }) => {
   const [loading, setLoading] = useState(false);   
  
   const handleUpload = async () => {
-    const pinataApiKey = "edd48a83f66c1b7abe28";
+    const pinataApiKey = "";
     const pinataApiSecret =
-      "867b0b44ade84f019111f4d0347d8d8714214d7f4cb34fedf251b5c305e943ec";
+      "";
 
     const formData = new FormData();
     formData.append("file", file);

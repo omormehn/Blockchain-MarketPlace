@@ -10,6 +10,19 @@ import { AiFillProduct } from "react-icons/ai";
 import ListingModal from "../WalltPopup/ListingModal.jsx";
 import Modal from "../WalltPopup/ConnectModal.jsx";
 
+const NavbarMenu = [
+  {
+    id: 1,
+    name: "Explore",
+    url: '/products'
+  },
+  {
+    id: 2,
+    name: "Listings",
+    url: '/mine'
+  }
+]
+
 
 
 const Navbar = () => {
@@ -61,6 +74,7 @@ const Navbar = () => {
         setWalletAddress(accounts[0]);
         console.log("MetaMask account changed:", accounts[0]);
         toast.success("Account changed to: " + accounts[0]);
+        window.location.reload();
       }
     };
 
@@ -203,7 +217,7 @@ const Navbar = () => {
                         items-center gap-4 text-xl font-semibold"
                   >
                     {NavbarMenu.map((menu) => (
-                      <li key={menu.name}>
+                      <li >
                         <a
                           href={menu.url}
                           className="px-2 py-4 md:py-6 inline-block cursor-pointer"

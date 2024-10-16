@@ -9,6 +9,8 @@ import { IoCartSharp } from "react-icons/io5";
 import { AiFillProduct } from "react-icons/ai";
 import ListingModal from "../WalltPopup/ListingModal.jsx";
 import Modal from "../WalltPopup/ConnectModal.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleStatusTab } from "../../store/cart.js";
 
 const NavbarMenu = [
   {
@@ -31,6 +33,19 @@ const Navbar = () => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [issOpen, setIssOpen] = useState(false);
+  const [ totalQuant, setTotalQuant ] = useState(0);
+  const dispatch = useDispatch();
+  const carts = useSelector(store => store.cart.items);
+
+  useEffect(() => {
+    let total = 0;
+    carts.forEach(item => total += item.quantity);
+    setTotalQuant(total)
+  })
+
+  const OpenCart = () =>{
+    dispatch(toggleStatusTab())
+  }
   
 
   const toggleMenu = () => {
@@ -41,7 +56,7 @@ const Navbar = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  //set wallet address
+
   const handleAccountChange = (account) => {
     setWalletAddress(account);
   };
@@ -150,6 +165,9 @@ const Navbar = () => {
               src="./logo2.png"
               className="cursor-pointer w-30 h-12 py-2 lg:ml-8 xl:w-48 pl-2 md:pl-8 xl:pl-20"
               alt="logo"
+              onClick={()=> {
+                window.location.href = '/'
+              }}
             />
           </div>
 
@@ -161,9 +179,12 @@ const Navbar = () => {
               }} />
             </li>
            
-            <li>
-              <IoCartSharp size={23} className="cursor-pointer" />
-            </li>
+            <div className="flex justify-center items-center rounded-full bg-gray-300 relative h-10 w-10">
+              <IoCartSharp size={23} className="cursor-pointer" onClick={OpenCart}/>
+              <span className="absolute top-2/3 right-1/2 text-sm text-center flex justify-center items-center  rounded-full bg-red-500 h-5 w-5">
+              {totalQuant}
+              </span>
+            </div>
             <div>
               {isOpen &&
                 createPortal(

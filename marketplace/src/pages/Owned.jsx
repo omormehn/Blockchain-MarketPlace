@@ -1,17 +1,17 @@
-import React from 'react'
-import ProductCard from '../ProducCards/OwnedProdCard'
-import Header from './Header/Header';
+import React from "react";
+import ProductCard from "../ProducCards/OwnedProdCard";
+
+
 
 const OwnedProducts = () => {
   return (
     <div>
-      <Header/>
-      <div>
-        <h1 className='container font-bold'>Owned Products</h1>
+      <h1 className="container font-bold pt-24">Owned Products</h1>
+      <div className="flex">
         <ProductCard />
       </div>
     </div>
   );
-}
+};
 
-export default OwnedProducts
+export default OwnedProducts;

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { contractAbi, contractAddress } from '../contracts/contract';
 
 export const connectWallet = async() => {
     if (!window.ethereum) return alert ("Metamask not Installed");
@@ -16,4 +17,12 @@ export const connectWallet3 = async () => {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
   return signer;
+};
+
+export const connectWallet4 = async () => {
+  if (!window.ethereum) return alert("Metamask not Installed");
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const contract = new ethers.Contract(contractAbi, contractAddress, signer);
+  return contract;
 };

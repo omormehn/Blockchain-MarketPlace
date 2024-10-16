@@ -13,6 +13,12 @@ import {
   connectWallet2,
   connectWallet3,
 } from "../Web3/connectWallet";
+import { useDispatch } from "react-redux";
+import { addItem } from "../store/cart";
+
+
+
+
 
 const ProductCard = ({ searchQuery }) => {
   const [products, setProducts] = useState([]);
@@ -22,6 +28,9 @@ const ProductCard = ({ searchQuery }) => {
   const [account, setAccount] = useState("");
   const [balance, setBalance] = useState(null);
   const [searchParam] = useState(["name", "category"]);
+  const [cart, setCart] = useState([]);
+
+  const dispatch = useDispatch();
 
   function search(products) {
     const queryRes = products.filter((item) => {
@@ -64,6 +73,16 @@ const ProductCard = ({ searchQuery }) => {
     }
     init();
   }, []);
+
+    const handleAddToCart = (product) => {
+      dispatch(addItem({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.imageHash,
+        quantity: 1
+      }));
+    };
 
   const handleBuyProduct = async (product) => {
     const productPrice = product.price;
@@ -111,20 +130,38 @@ const ProductCard = ({ searchQuery }) => {
             <img
               src={`https://ipfs.io/ipfs/${product.imageHash}`}
               alt="Uploaded Image"
-              className="w-72 h-60 lg:h-48 xs:w-[19rem] lg:w-80 rounded-t-lg"
+              className="w-80 h-60 lg:h-48 xs:w-[20rem] lg:w-80 rounded-t-lg"
             />
-            <div className="card grid gap-5">
+            <div className="card grid justify-center gap-5">
               <div>
                 <h1 className="text-2xl font-bold">{product.name}</h1>
-                <h3>{ethers.formatEther(product.price)} GO</h3>
-                <h3>Desc: {product.description}</h3>
+                <h3 className="font-bold">
+                  {ethers.formatEther(product.price)} GO
+                </h3>
+                <h3> {product.description}</h3>
+                <small>{product.owner}</small>
               </div>
-              <button className="secondary-btn">Add to cart</button>
-              <div className="secondary-btn text-center">
-                {product.owner.toLowerCase() && product.isDeleted == false ? (
-                  <button onClick={() => handleBuyProduct(product)}>
-                    Purchase
-                  </button>
+              <div className="">
+                {product.owner.toLowerCase() === account[0].toLowerCase() ? (
+                  <small className="text-left">Owned</small>
+                ) : product.owner.toLowerCase() &&
+                  product.isDeleted == false && account[0] ? (
+                  <div className="flex flex-col gap-5 justify-center">
+                    <button
+                      className="secondary-btn"
+                      onClick={() => {
+                        handleAddToCart(product);
+                      }}
+                    >
+                      Add to cart
+                    </button>
+                    <button
+                      className="secondary-btn "
+                      onClick={() => handleBuyProduct(product)}
+                    >
+                      Purchase
+                    </button>
+                  </div>
                 ) : (
                   <small></small>
                 )}
@@ -143,6 +180,7 @@ const ProductCard = ({ searchQuery }) => {
           </div>
         ))
       )}
+    
     </div>
   );
 };

@@ -15,9 +15,9 @@ const ListingModal = ({ setIssOpen }) => {
   const [loading, setLoading] = useState(false);   
  
   const handleUpload = async () => {
-    const pinataApiKey = "";
+    const pinataApiKey = "edd48a83f66c1b7abe28";
     const pinataApiSecret =
-      "";
+      "867b0b44ade84f019111f4d0347d8d8714214d7f4cb34fedf251b5c305e943ec";
 
     const formData = new FormData();
     formData.append("file", file);
@@ -36,7 +36,6 @@ const ListingModal = ({ setIssOpen }) => {
       );
 
       const response = await fetchResponse.json();
-      console.log("response:", response);
       const cid = response.IpfsHash;
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
@@ -53,9 +52,14 @@ const ListingModal = ({ setIssOpen }) => {
         const category = document.getElementById("category").value;
        
         if (name && price && desc && category != "") {
-            await listProducts(contract, name, price, desc, category, cid);
-            toast.success("Product Listed Successfully");
-            setIssOpen(false);
+             try {
+               await listProducts(contract, name, price, desc, category, cid);
+               toast.success("Product Listed Successfully");
+               setIssOpen(false);
+               window.location.reload();
+             } catch (error) {
+               console.error("Error creating product:", error);
+             }
         } else {
             setIssOpen(true);
             toast.error("Please fill all fields");

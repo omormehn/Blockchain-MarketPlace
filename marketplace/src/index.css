@@ -23,9 +23,8 @@ html{
 .card {
     background-color: #fff;
     border: 1px solid #ddd;
- 
     padding: 20px;
-    width: clamp(10px, 90vw, 300px);
+    width: clamp(10px, 96vw, 500px);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -63,21 +62,21 @@ html{
 
 @media (min-width: 375px) {
     .card {
-        width: clamp(288px, 70vw, 350px);
+        width: clamp(288px, 95vw, 320px);
     }
 }
 @media (min-width: 425px) {
     .card {
-        width: clamp(305px, 70vw, 350px);
+        width: clamp(305px, 90vw, 320px);
     }
 }
 @media (min-width: 768px) {
     .card {
-        width: clamp(200px, 90vw, 304.5px);
+        width: clamp(200px, 90vw, 320px);
     }
 }
 @media (min-width: 1024px) {
     .card {
-        width: clamp(200px, 30vw, 320px);
+        width: clamp(200px, 90vw, 320px);
     }
 }

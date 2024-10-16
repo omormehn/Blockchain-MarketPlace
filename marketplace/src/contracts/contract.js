@@ -699,7 +699,7 @@ export const contractAbi = [
     stateMutability: "payable",
     type: "receive",
   },
-]
+];
 
 
 export const loadProducts = async (contract) => {
@@ -753,7 +753,13 @@ export const listProducts = async (
     await tx.wait();
     loadProducts(contract);
   } catch (error) {
-    console.error("Error in list product", error);
+     if (error.code === 4001) {   
+       console.error("User  rejected the transaction");
+       toast.error("Transaction rejected. Please try again.");
+     } else {
+       console.error("Error creating product:", error);
+       toast.error("Error creating product. Please try again.");
+     }
   }
 };
 

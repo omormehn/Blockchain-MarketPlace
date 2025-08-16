@@ -1,13 +1,9 @@
-# Sample Hardhat Project
+Add an RPC localhost network to metamask
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+url: http://localhost:8545
+chainid: 31137
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
-```
+First run npx hardhat node
+then deploy contract and get abi
+clear metamask nonce
+start debugging crud

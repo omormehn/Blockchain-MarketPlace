@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 
-export const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 export const contractAbi = [
   {
@@ -701,10 +701,9 @@ export const contractAbi = [
   },
 ];
 
-
 export const loadProducts = async (contract) => {
   try {
-    console.log("som", contractAbi)
+    console.log("som", contractAbi);
     const countProduct = await contract.countProduct();
     let products = [];
     for (let i = 1; i <= countProduct; i++) {
@@ -727,7 +726,6 @@ export const loadOwnedProducts = async (contract) => {
       ownedProductId.map((id) => contract.products(id))
     );
     return ownedItems;
-    
   } catch (error) {
     console.error("Error in load owned Product", error);
   }
@@ -753,13 +751,13 @@ export const listProducts = async (
     await tx.wait();
     loadProducts(contract);
   } catch (error) {
-     if (error.code === 4001) {   
-       console.error("User  rejected the transaction");
-       toast.error("Transaction rejected. Please try again.");
-     } else {
-       console.error("Error creating product:", error);
-       toast.error("Error creating product. Please try again.");
-     }
+    if (error.code === 4001) {
+      console.error("User  rejected the transaction");
+      toast.error("Transaction rejected. Please try again.");
+    } else {
+      console.error("Error creating product:", error);
+      toast.error("Error creating product. Please try again.");
+    }
   }
 };
 
@@ -768,14 +766,14 @@ export const buyProducts = async (
   productId,
   price,
   provider,
-  account,
+  account
 ) => {
   console.log("Account:", account[0]);
   const accountBalance = await provider.getBalance(account[0]);
   const productPrice = ethers.parseEther(price);
   try {
     if (accountBalance <= productPrice) {
-      toast.error("Insufficient")
+      toast.error("Insufficient");
       throw new Error("Insufficient funds");
     }
 
@@ -784,7 +782,7 @@ export const buyProducts = async (
       gasLimit: 30000000,
     });
     await tx.wait();
-    
+
     window.location.reload();
 
     loadProducts(contract);

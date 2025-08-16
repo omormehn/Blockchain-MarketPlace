@@ -36,6 +36,7 @@ const Navbar = () => {
   const [ totalQuant, setTotalQuant ] = useState(0);
   const dispatch = useDispatch();
   const carts = useSelector(store => store.cart.items);
+  console.log(walletAddress, "wallet address");
 
   useEffect(() => {
     let total = 0;

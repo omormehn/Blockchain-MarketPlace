@@ -52,12 +52,12 @@ const ProductCard = () => {
             className="z-50"
           />
         </div>
-      ) : owned.length === 0 ? (
+      ) : owned?.length === 0 ? (
         <div className="pt-10 md:pt-20 lg:pt-24 text-center">
           <h2>No owned items found.</h2>
         </div>
       ) : (
-        owned.map((product, index) => (
+        owned?.map((product, index) => (
           <div
             key={index}
             className="flex justify-center flex-col m-5 hover:scale-105"

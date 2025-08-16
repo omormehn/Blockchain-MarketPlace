@@ -1,5 +1,4 @@
-import { footer } from "framer-motion/client";
-import React from "react";
+
 const Footer = () => {
   return (
    <footer className="pt-5">

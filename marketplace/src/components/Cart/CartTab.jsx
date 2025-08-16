@@ -1,4 +1,3 @@
-import { div } from 'framer-motion/client';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { loadProducts } from '../../contracts/contract';

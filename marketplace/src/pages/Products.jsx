@@ -6,7 +6,7 @@ const Products = () => {
     const [searchQuery, setSearchQuery] = useState("");
    
   return (
-    <div>
+    <div className="overflow-y-auto h-screen">
       <Header/>
       <div className="lg:container">
         <div className="font-bold text-xl lg:text-2xl ml-4  lg:ml-4 pt-5 ">

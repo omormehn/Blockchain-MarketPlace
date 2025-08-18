@@ -92,13 +92,14 @@ const ProductCard = ({ searchQuery }) => {
       return;
     }
     try {
-      await buyProducts(
+      const rr = await buyProducts(
         contract,
         product.id,
         ethers.formatEther(product.price),
         provider,
         account
       );
+      console.log("rr:", rr);
       const receipt = await provider.getTransactionReceipt(tx.hash)   
     } catch (error) {
       toast.error("Transaction Rejected");

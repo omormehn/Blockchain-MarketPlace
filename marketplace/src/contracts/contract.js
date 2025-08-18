@@ -771,18 +771,27 @@ export const buyProducts = async (
 ) => {
   console.log("Account:", account[0]);
   const accountBalance = await provider.getBalance(account[0]);
+  console.log("Account Balance:", ethers.formatEther(accountBalance));
   const productPrice = ethers.parseEther(price);
+  console.log("Product Price:", ethers.formatEther(productPrice));
+
   try {
+
     if (accountBalance <= productPrice) {
       toast.error("Insufficient");
       throw new Error("Insufficient funds");
     }
 
+    console.log("Buying product with ID:'");
     const tx = await contract.buyProducts(productId, {
       value: productPrice,
       gasLimit: 30000000,
     });
-    await tx.wait();
+
+    console.log("Transaction hash:", tx);
+    
+    const yy = await tx.wait();
+    console.log("Transaction receipt:", yy);
 
     window.location.reload();
 

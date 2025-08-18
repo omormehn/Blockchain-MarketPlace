@@ -114,7 +114,7 @@ const ProductCard = () => {
         ))
       )}
 
-      <div className="flex justify-center">
+      <div className="flex justify-center pb-4">
         <button onClick={() => setIsModalOpen(true)} className="primary-btn">
           Add Product
         </button>

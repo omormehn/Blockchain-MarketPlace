@@ -221,12 +221,14 @@ const Navbar = () => {
               />
             )}
           </div>
+
           {/* MOBILE MENU */}
           <div className="flex flex-row lg:hidden navbar ">
             <FiMenu
               className="text-3xl cursor-pointer mr-3"
               onClick={toggleMenu}
             />
+            
             {showMenu && (
               <div>
                 <div
@@ -239,7 +241,7 @@ const Navbar = () => {
                         items-center gap-4 text-xl font-semibold"
                   >
                     {NavbarMenu.map((menu) => (
-                      <li >
+                      <li  key={menu.id} className="hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
                         <a
                           href={menu.url}
                           className="px-2 py-4 md:py-6 inline-block cursor-pointer"

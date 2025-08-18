@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 
-export const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+export const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
 
 export const contractAbi = [
   {
@@ -702,9 +702,10 @@ export const contractAbi = [
 ];
 
 export const loadProducts = async (contract) => {
+  console.log("Loading products...", contract);
   try {
-    console.log("som", contractAbi);
     const countProduct = await contract.countProduct();
+    console.log("count", countProduct);
     let products = [];
     for (let i = 1; i <= countProduct; i++) {
       const product = await contract.products(i);

@@ -33,7 +33,7 @@ const ProductCard = ({ searchQuery }) => {
   const dispatch = useDispatch();
 
   function search(products) {
-    const queryRes = products.filter((item) => {
+    const queryRes = products?.filter((item) => {
       return searchParam.some((newItem) => {
         return (
           item[newItem]
@@ -117,18 +117,18 @@ const ProductCard = ({ searchQuery }) => {
             className="z-50"
           />
         </div>
-      ) : search(products).length === 0 ? (
+      ) : search(products)?.length === 0 ? (
         <div className="pt-28 lg:pt-36">
           <h1>No Products, Please Refresh</h1>
         </div>
       ) : (
-        search(products).map((product, index) => (
+        search(products)?.map((product, index) => (
           <div
             key={index}
             className="flex justify-center flex-col m-5 hover:scale-105"
           >
             <img
-              src={`https://ipfs.io/ipfs/${product.imageHash}`}
+              src={`https://ipfs.io/ipfs/${product?.imageHash}`}
               alt="Uploaded Image"
               className="w-80 h-60 lg:h-48 xs:w-[20rem] lg:w-80 rounded-t-lg"
             />

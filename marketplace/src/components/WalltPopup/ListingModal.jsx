@@ -12,16 +12,19 @@ import {
 
 const ListingModal = ({ setIssOpen }) => {
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);   
- 
+  const [loading, setLoading] = useState(false);
+  const stuff = import.meta.env.VITE_PINATA_API_KEY;
+
   const handleUpload = async () => {
-    const pinataApiKey = "";
-    const pinataApiSecret =
-      "";
+    console.log('clicked');
+    const pinataApiKey = import.meta.env.VITE_PINATA_API_KEY;
+    const pinataApiSecret = import.meta.env.VITE_PINATA_API_SECRET;
 
     const formData = new FormData();
     formData.append("file", file);
-    setLoading(true)
+    console.log("FormData:", formData);
+    console.log("file:", file);
+    setLoading(true);
     try {
       const fetchResponse = await fetch(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -34,9 +37,12 @@ const ListingModal = ({ setIssOpen }) => {
           body: formData,
         }
       );
+      console.log("Fetch response:", fetchResponse);
 
       const response = await fetchResponse.json();
+      console.log("File uploaded to IPFS:", response);
       const cid = response.IpfsHash;
+      console.log("CID:", cid);
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
@@ -50,19 +56,19 @@ const ListingModal = ({ setIssOpen }) => {
         const price = document.getElementById("itemPrice").value;
         const desc = document.getElementById("itemDesc").value;
         const category = document.getElementById("category").value;
-       
+
         if (name && price && desc && category != "") {
-             try {
-               await listProducts(contract, name, price, desc, category, cid);
-               toast.success("Product Listed Successfully");
-               setIssOpen(false);
-               window.location.reload();
-             } catch (error) {
-               console.error("Error creating product:", error);
-             }
+          try {
+            await listProducts(contract, name, price, desc, category, cid);
+            // toast.success("Product Listed Successfully");
+            setIssOpen(false);
+            // window.location.reload();
+          } catch (error) {
+            console.error("Error creating product:", error);
+          }
         } else {
-            setIssOpen(true);
-            toast.error("Please fill all fields");
+          setIssOpen(true);
+          toast.error("Please fill all fields");
         }
       } catch (error) {
         toast.error("Error uploading file. Please try again.");
@@ -75,8 +81,6 @@ const ListingModal = ({ setIssOpen }) => {
       setLoading(false);
     }
   };
-
-  
 
   return (
     <>

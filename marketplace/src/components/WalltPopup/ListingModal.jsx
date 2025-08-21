@@ -13,7 +13,8 @@ import {
 const ListingModal = ({ setIssOpen }) => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const stuff = import.meta.env.VITE_PINATA_API_KEY;
+  const stuff = import.meta.env.VITE_CONTRACT_ADDRESS;
+  console.log('st', stuff)
 
   const handleUpload = async () => {
     console.log('clicked');
@@ -52,6 +53,7 @@ const ListingModal = ({ setIssOpen }) => {
           contractAbi,
           signer
         );
+        
         const name = document.getElementById("name").value;
         const price = document.getElementById("itemPrice").value;
         const desc = document.getElementById("itemDesc").value;
@@ -75,7 +77,7 @@ const ListingModal = ({ setIssOpen }) => {
         console.error("Error creating product:", error);
       }
     } catch (error) {
-      toast.error("Error uploading file. Please try again.");
+      toast.error("Error uploading fileee. Please try again.");
       console.error("Error uploading file to IPFS:", error);
     } finally {
       setLoading(false);

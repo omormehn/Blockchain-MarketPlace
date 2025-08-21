@@ -1,10 +1,10 @@
 const hardhat = require("hardhat");
 
 async function main() {
+  const escrow = process.env.ESCROW_ADDRESS;
+  if (!escrow) throw new Error("Set ESCROW_ADDRESS in .env");
 
-  const escrow = "0xd9145CCE52D386f254917e481eB44e9943F39138";
-
-  const MarketPlace = await hardhat.ethers.getContractFactory('Market')
+  const MarketPlace = await hardhat.ethers.getContractFactory("Market");
   const marketPlace = await MarketPlace.deploy(escrow);
 
   await marketPlace.waitForDeployment();

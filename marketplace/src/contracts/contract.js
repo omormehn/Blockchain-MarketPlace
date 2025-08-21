@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 
-export const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+export const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
+console.log(contractAddress)
 
 export const contractAbi = [
   {
@@ -776,7 +777,6 @@ export const buyProducts = async (
   console.log("Product Price:", ethers.formatEther(productPrice));
 
   try {
-
     if (accountBalance <= productPrice) {
       toast.error("Insufficient");
       throw new Error("Insufficient funds");
@@ -789,7 +789,7 @@ export const buyProducts = async (
     });
 
     console.log("Transaction hash:", tx);
-    
+
     const yy = await tx.wait();
     console.log("Transaction receipt:", yy);
 
